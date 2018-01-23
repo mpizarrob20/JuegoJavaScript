@@ -1,21 +1,20 @@
-/*
-GAME RULES:
+/* YOUR 3 CHALLENGES
+Change the game to follow these rules:
 
-- The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he whishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
+1. A player looses his ENTIRE score when he rolls two 6 in a row. After that, it's the next player's turn. (Hint: Always save the previous dice roll in a separate variable)
+2. Add an input field to the HTML where players can set the winning score, so that they can change the predefined score of 100. (Hint: you can read that value with the .value property in JavaScript. This is a good oportunity to use google to figure this out :)
+3. Add another dice to the game. so that there are two dices now. Player looses his current score when one for them is a 1. (Hint: you will need CSS to position the second dice, so take a look at the CSS code for the first one.)
 
-En cada turno, un jugador tira un dado tantas veces como desee. Cada resultado se agrega a su puntaje ROUND
-- PERO, si el jugador tira un 1, se pierde toda su puntuación de la VUELTA. Después de eso, es el turno del siguiente jugador
-- El jugador puede elegir 'Mantener', lo que significa que su puntuación de ROUND se agrega a su puntuación GLBAL. Después de eso, es el turno del siguiente jugador
-
+1. Un jugador pierde su puntaje COMPLETO cuando saca dos 6 en una fila. Después de eso, es el turno del siguiente jugador. (Sugerencia: siempre guarde la tirada de dados anterior en una variable separada)
+2. Agregue un campo de entrada al HTML donde los jugadores pueden establecer la puntuación ganadora, de modo que puedan cambiar la puntuación predefinida de 100. (Sugerencia: puede leer ese valor con la propiedad .value en JavaScript. Esta es una buena oportunidad para usa google para resolver esto :)
+3. Agregue otro dado al juego. de modo que ahora hay dos dados. El jugador pierde su puntaje actual cuando uno de ellos es un 1. (Pista: necesitarás CSS para colocar el segundo dado, así que eche un vistazo al código CSS para el primero).
 */
 
 var scores, roundScore, activePlayer, gamePlaying;
 
 init();
+
+var lastDice;
 
 document.querySelector('.btn-roll').addEventListener('click', function(){
     
@@ -30,7 +29,11 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
     
     
         //3. Update the round score IF the rolled number was NOT a 1
-        if(dice !== 1){
+        if(dice === 6 && lastDice === 6){
+            //Player looses score
+            scores[activePlayer] = 0;
+            document.querySelector('#score-' + activePlayer).textContent = '0';
+        }else if(dice !== 1){
             //Add score
             roundScore += dice;
             document.querySelector('#current-' + activePlayer).textContent = roundScore;
@@ -38,7 +41,9 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
             //Next player
             nextPlayer();
        
-        }        
+        }
+        
+        var lastDice = dice;        
     }
     
    
@@ -53,8 +58,11 @@ document.querySelector('.btn-hold').addEventListener('click', function(){
         //Update the UI
         document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
     
+        var input = document.querySelector('.final-score').value;
+        //
+        
         //Check if player won the game
-        if(scores[activePlayer] >= 20){
+        if(scores[activePlayer] >= 100){
             document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
             document.querySelector('.dice').style.display = 'none';
             document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
@@ -115,9 +123,3 @@ function init(){
     document.querySelector('.player-0-panel').classList.add('active');
 
 }
-
-
-
-
-
-
